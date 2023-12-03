@@ -11,9 +11,9 @@ import {
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { ellipse, square, triangle } from "ionicons/icons";
-import Tab1 from "./pages/Tab1";
-import Tab2 from "./pages/Tab2";
-import Tab3 from "./pages/Tab3";
+import List from "./pages/list";
+import Create from "./pages/create";
+import Edit from "./pages/edit";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -41,17 +41,17 @@ const App: React.FC = () => (
         <IonReactRouter>
             <IonTabs>
                 <IonRouterOutlet>
-                    <Route exact path="/tab1">
-                        <Tab1 />
+                    <Route exact path="/list">
+                        <List />
                     </Route>
-                    <Route exact path="/tab2">
-                        <Tab2 />
+                    <Route exact path="/create">
+                        <Create />
                     </Route>
-                    <Route path="/tab3">
-                        <Tab3 />
+                    <Route path="/edit/:id">
+                        <Edit />
                     </Route>
                     <Route exact path="/">
-                        <Redirect to="/tab1" />
+                        <Redirect to="/list" />
                     </Route>
                 </IonRouterOutlet>
                 <IonTabBar slot="bottom">

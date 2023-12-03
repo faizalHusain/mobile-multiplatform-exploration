@@ -13,23 +13,50 @@ import {
 } from "@ionic/react";
 import { create, trash } from "ionicons/icons";
 import ExploreContainer from "../components/ExploreContainer";
-import "./Tab1.css";
-
-const Tab1: React.FC = () => {
-    const data = [
-        {
-            nama: "Aji",
-            nim: "123",
-        },
-        {
-            nama: "Budi",
-            nim: "456",
-        },
-        {
-            nama: "Caca",
-            nim: "789",
-        },
-    ];
+import "./list.css";
+import api from "../configs/axios-interceptors";
+import React from "react";
+import { useState, useEffect } from "react";
+import { useIonToast } from "@ionic/react";
+interface Mahasiswa {
+    id: number;
+    nama: string;
+    nim: string;
+    created_at: string;
+    updated_at: string;
+}
+const showToast = (message: string, color: string) => {
+    const [present] = useIonToast();
+    present({
+        color: color,
+        message: message,
+        duration: 3000,
+    });
+};
+const list: React.FC = () => {
+    const [data, setData] = useState<Mahasiswa[]>([]);
+    const getData = async () => {
+        try {
+            const response = await api.get("/mahasiswa");
+            setData(response.data.data);
+            console.log(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const deleteData = async function (id: number) {
+        try {
+            const response = await api.delete(`/mahasiswa`, {
+                data: { id: id },
+            });
+            console.log(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    useEffect(() => {
+        getData();
+    }, []);
     return (
         <IonPage>
             <IonHeader>
@@ -41,7 +68,7 @@ const Tab1: React.FC = () => {
                 <IonGrid>
                     <IonRow>
                         <IonCol className="ion-text-start">
-                            <IonButton routerLink="/tab2">Tambah</IonButton>
+                            <IonButton routerLink="/create">Tambah</IonButton>
                         </IonCol>
                     </IonRow>
                 </IonGrid>
@@ -60,10 +87,14 @@ const Tab1: React.FC = () => {
                                 {item.nim}
                             </IonCol>
                             <IonCol className="ion-text-center">
-                                <IonButton routerLink="/tab3">
+                                <IonButton routerLink={`/edit/${item.id}`}>
                                     <IonIcon icon={create}></IonIcon>
                                 </IonButton>
-                                <IonButton>
+                                <IonButton
+                                    onClick={() => {
+                                        deleteData(item.id);
+                                    }}
+                                >
                                     <IonIcon icon={trash}></IonIcon>
                                 </IonButton>
                             </IonCol>
@@ -76,4 +107,4 @@ const Tab1: React.FC = () => {
     );
 };
 
-export default Tab1;
+export default list;
